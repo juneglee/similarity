@@ -1,7 +1,7 @@
 from PIL import Image
 import torch
-import numpy as np
 from torchvision import transforms
+from similarity import cosine_similarity, euclidean
 
 # Model loading.
 model = torch.jit.load('weight/inception_v3.pt')
@@ -23,16 +23,15 @@ def embedding(image_path):
 
     return embedding
 
-def cosine_similarity(x, y):
-    return np.dot(x, y) / (np.sqrt(np.dot(x, x)) * np.sqrt(np.dot(y, y)))
-
 if __name__ == '__main__':
     target_path = 'images/cat.jpeg'
     input_path = 'images/dog.jpeg'
     target_feature = embedding(target_path)
     input_feature = embedding(input_path)
     cos_sim = cosine_similarity(target_feature, input_feature)
+    euc_di = euclidean(target_feature, input_feature)
 
     print(f'target : {target_path.split("/")[-1]}, input : {input_path.split("/")[-1]}, Cosine similarity : {cos_sim}')
+    print(f'target : {target_path.split("/")[-1]}, input : {input_path.split("/")[-1]}, euclidean distance : {euc_di}')
 
 
